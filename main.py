@@ -13,7 +13,9 @@ class SimpleHandler(SimpleHTTPRequestHandler):
 
     def do_GET(self):
         print(self.path)
-        if '/images/' in self.path:
+        if self.path == '/':
+            self._send_response('This is just an empty endpoint', status=200)
+        elif '/images/' in self.path:
             pathImg='assets/images/'+self.path.split("/images/")[1]
             print(pathImg)
             if os.path.exists(pathImg):
