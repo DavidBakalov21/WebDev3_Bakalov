@@ -3,6 +3,8 @@ import json
 import os
 from helpers.Checker import CheckUrl
 from helpers.Exeminer import exemine_file
+from helpers.info import endpoints_info
+
 class SimpleHandler(SimpleHTTPRequestHandler):
     def _send_response(self, message, status=200):
         self.send_response(status)
@@ -14,7 +16,7 @@ class SimpleHandler(SimpleHTTPRequestHandler):
     def do_GET(self):
         print(self.path)
         if self.path == '/':
-            self._send_response('This is just an empty endpoint', status=200)
+            self._send_response(json.dumps(endpoints_info, sort_keys=True, indent=4))
         elif '/images/' in self.path:
             pathImg='assets/images/'+self.path.split("/images/")[1]
             print(pathImg)
@@ -59,7 +61,7 @@ class SimpleHandler(SimpleHTTPRequestHandler):
             try:
                 data = json.loads(post_data.decode('utf-8'))
                 self._send_response(
-                    json.dumps({'req': 'This is a POST request with path ' + self.path, 'data_received': data}))
+                    json.dumps({'data_received': data}))
             except json.JSONDecodeError:
                 self._send_response('Error: Invalid JSON data received in the POST request.', status=400)
 
